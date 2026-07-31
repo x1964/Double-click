@@ -141,8 +141,19 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* كريديت التطوير */}
       <div className="border-t border-white/15 py-4 text-center text-xs opacity-70">
         © 2026 Double Click — كل الحقوق محفوظة
+        <span className="mx-2">·</span>
+        <a
+          href="https://wa.me/201207771639"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:opacity-100 hover:text-white transition-colors"
+        >
+          تطوير الموقع من شركة{" "}
+          <span className="font-bold text-white/90">kernel-z</span>
+        </a>
       </div>
     </footer>
   );

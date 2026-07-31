@@ -42,4 +42,6 @@ export type Product = {
   inStock?: boolean;
   /** وصف مختصر يظهر تحت السعر */
   badge?: string;
+  /** مسار صورة المنتج (لو فيها صورة حقيقية في /public/products/) */
+  image?: string;
 };
