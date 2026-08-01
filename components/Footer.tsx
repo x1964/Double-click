@@ -1,12 +1,11 @@
 import { categories } from "@/lib/data";
 import { CONTACT } from "@/lib/constants";
-import { Phone } from "lucide-react";
+import { Phone, Mail, MapPin, Send } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 /**
- * الفوتر الموحّد (Shared Footer)
- * بيظهر في كل الصفحات عن طريق layout.tsx.
- * كل الروابط مربوطة بصفحات حقيقية جوّه الموقع أو قنوات تواصل خارجية.
+ * الفوتر الموحّد (Shared Footer) — تصميم داكن فاخر
  */
 
 function FacebookIcon({ size = 18 }: { size?: number }) {
@@ -33,7 +32,6 @@ function WhatsAppIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-/** روابط خدمة العملاء (صفحات داخلية) */
 const customerLinks: { label: string; href: string }[] = [
   { label: "تتبع الطلب", href: "/track-order" },
   { label: "الشحن والتوصيل", href: "/shipping" },
@@ -42,7 +40,6 @@ const customerLinks: { label: string; href: string }[] = [
   { label: "تواصل معنا", href: "/contact" },
 ];
 
-/** روابط الشركة (صفحات داخلية) */
 const companyLinks: { label: string; href: string }[] = [
   { label: "عن دبيل كليك", href: "/about" },
   { label: "الوظائف", href: "/careers" },
@@ -52,42 +49,79 @@ const companyLinks: { label: string; href: string }[] = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[var(--color-brand-deep)] text-white mt-8">
-      <div className="dc-container py-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6">
-          {/* العمود الأول: عن المتجر */}
+    <footer className="relative bg-[var(--color-brand-deep)] text-white overflow-hidden">
+      {/* زخرفة خلفية */}
+      <div className="absolute inset-0 dc-grid-bg opacity-10" />
+      <div className="absolute -top-32 right-1/4 w-96 h-96 rounded-full bg-[var(--color-brand)]/15 blur-[120px]" />
+
+      {/* الشريط العلوي - نشرة بريدية */}
+      <div className="relative border-b border-white/10">
+        <div className="dc-container py-8 flex flex-col md:flex-row items-center justify-between gap-5">
+          <div>
+            <h4 className="text-lg font-extrabold">اشترك في النشرة البريدية</h4>
+            <p className="text-sm text-white/60 mt-1">كن أول من يعرف عن العروض والمنتجات الجديدة</p>
+          </div>
+          <form className="flex w-full md:w-auto gap-2 max-w-md">
+            <div className="relative flex-1 md:w-72">
+              <Mail
+                size={16}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40"
+              />
+              <input
+                type="email"
+                placeholder="بريدك الإلكتروني"
+                className="w-full bg-white/8 ring-1 ring-white/15 rounded-xl pr-9 pl-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[var(--color-accent)] placeholder:text-white/40 transition-all"
+              />
+            </div>
+            <button
+              type="submit"
+              className="dc-btn-primary rounded-xl px-5 py-3 font-bold flex items-center gap-2 shrink-0"
+            >
+              <Send size={15} />
+              <span className="hidden sm:inline">اشترك</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* المحتوى الرئيسي */}
+      <div className="relative dc-container py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
+          {/* عن المتجر */}
           <div className="col-span-2 md:col-span-1">
-            <div className="font-extrabold mb-3.5 text-lg">Double Click</div>
-            <p className="text-[13px] opacity-75 leading-7 mb-5">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-dark)] flex items-center justify-center shadow-lg p-1">
+                <Image src="/logo.jpeg" alt="Double Click" width={30} height={30} className="rounded-md object-contain" />
+              </div>
+              <span className="font-extrabold text-lg">Double Click</span>
+            </div>
+            <p className="text-[13px] text-white/60 leading-7 mb-5">
               وجهتك لكل مستلزمات الكمبيوتر في مصر — أصلي، بضمان، وتوصيل لباب البيت.
             </p>
 
-            {/* قنوات التواصل السريعة */}
             <div className="space-y-2.5 mb-5">
               <a
                 href={`https://wa.me/${CONTACT.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-[13px] opacity-85 hover:opacity-100 hover:text-[#25D366] transition-colors"
+                className="flex items-center gap-2.5 text-[13px] text-white/70 hover:text-[#25D366] transition-colors"
               >
-                <WhatsAppIcon size={15} /> <span dir="ltr">{CONTACT.phone}</span>
+                <Phone size={14} />
+                <span dir="ltr">{CONTACT.phone}</span>
               </a>
-              <a
-                href={`tel:${CONTACT.phone}`}
-                className="flex items-center gap-2.5 text-[13px] opacity-85 hover:opacity-100 hover:text-white transition-colors"
-              >
-                <Phone size={15} /> <span dir="ltr">{CONTACT.phone}</span>
-              </a>
+              <div className="flex items-center gap-2.5 text-[13px] text-white/70">
+                <MapPin size={14} />
+                <span>الإسكندرية، مصر</span>
+              </div>
             </div>
 
-            {/* أيقونات السوشيال */}
             <div className="flex gap-2.5">
               <a
                 href={`https://wa.me/${CONTACT.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="واتساب"
-                className="w-9 h-9 rounded-full bg-[#25D366]/20 hover:bg-[#25D366] hover:text-white text-[#25D366] flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-xl bg-white/8 hover:bg-[#25D366] hover:text-white text-white/80 flex items-center justify-center transition-all hover:-translate-y-0.5"
               >
                 <WhatsAppIcon size={17} />
               </a>
@@ -96,7 +130,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="فيسبوك"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#1877F2] flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-xl bg-white/8 hover:bg-[#1877F2] flex items-center justify-center transition-all hover:-translate-y-0.5"
               >
                 <FacebookIcon size={17} />
               </a>
@@ -105,7 +139,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="تيك توك"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white hover:text-black flex items-center justify-center transition-all"
+                className="w-10 h-10 rounded-xl bg-white/8 hover:bg-white hover:text-black flex items-center justify-center transition-all hover:-translate-y-0.5"
               >
                 <TikTokIcon size={17} />
               </a>
@@ -114,13 +148,13 @@ export default function Footer() {
 
           {/* تسوق */}
           <div>
-            <div className="font-bold mb-4 text-sm tracking-wide">تسوّق</div>
+            <div className="font-bold mb-4 text-sm tracking-wide text-white">تسوّق</div>
             <ul className="space-y-3">
               {categories.slice(0, 5).map((c) => (
                 <li key={c.slug}>
                   <Link
                     href={`/category/${encodeURIComponent(c.slug)}`}
-                    className="text-[13px] opacity-75 hover:opacity-100 hover:text-[var(--color-accent)] transition-colors"
+                    className="text-[13px] text-white/60 hover:text-[var(--color-accent)] transition-colors"
                   >
                     {c.name}
                   </Link>
@@ -131,13 +165,13 @@ export default function Footer() {
 
           {/* خدمة العملاء */}
           <div>
-            <div className="font-bold mb-4 text-sm tracking-wide">خدمة العملاء</div>
+            <div className="font-bold mb-4 text-sm tracking-wide text-white">خدمة العملاء</div>
             <ul className="space-y-3">
               {customerLinks.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-[13px] opacity-75 hover:opacity-100 hover:text-[var(--color-accent)] transition-colors"
+                    className="text-[13px] text-white/60 hover:text-[var(--color-accent)] transition-colors"
                   >
                     {l.label}
                   </Link>
@@ -148,13 +182,13 @@ export default function Footer() {
 
           {/* الشركة */}
           <div>
-            <div className="font-bold mb-4 text-sm tracking-wide">الشركة</div>
+            <div className="font-bold mb-4 text-sm tracking-wide text-white">الشركة</div>
             <ul className="space-y-3">
               {companyLinks.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-[13px] opacity-75 hover:opacity-100 hover:text-[var(--color-accent)] transition-colors"
+                    className="text-[13px] text-white/60 hover:text-[var(--color-accent)] transition-colors"
                   >
                     {l.label}
                   </Link>
@@ -166,16 +200,16 @@ export default function Footer() {
       </div>
 
       {/* كريديت التطوير */}
-      <div className="border-t border-white/10 py-4">
+      <div className="relative border-t border-white/10 py-5">
         <div className="dc-container flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-right">
-          <div className="text-xs opacity-65">
+          <div className="text-xs text-white/50">
             © 2026 Double Click — كل الحقوق محفوظة
           </div>
           <a
             href="https://wa.me/201207771639"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs opacity-65 hover:opacity-100 hover:text-white transition-colors flex items-center gap-1.5"
+            className="text-xs text-white/50 hover:text-white transition-colors flex items-center gap-1.5"
           >
             تطوير الموقع من شركة
             <span className="font-bold text-white/90">kernel-z</span>

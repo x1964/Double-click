@@ -10,6 +10,9 @@ import {
   Menu,
   ChevronDown,
   X,
+  Truck,
+  ShieldCheck,
+  Headphones,
 } from "lucide-react";
 import Image from "next/image";
 import { categories } from "@/lib/data";
@@ -17,20 +20,28 @@ import { useCart } from "@/lib/cart-context";
 import { toArabicNumber } from "@/lib/data";
 
 /**
- * النافبار الموحّد (Shared Navbar)
- * بيظهر في كل الصفحات عن طريق layout.tsx.
+ * النافبار الموحّد (Shared Navbar) — تصميم احترافي عصري
+ * شريط علوي للإعلان + هيدر زجاجي عائم + شريط فئات.
  */
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [catsOpen, setCatsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { totalCount } = useCart();
   const pathname = usePathname();
   const catsRef = useRef<HTMLDivElement>(null);
 
   const isActive = (href: string) => pathname === href;
 
-  // قفل السكرول لما القائمة الجانبية تفتح
+  // كشف التمرير لإضافة تأثير الهيدر
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -38,7 +49,6 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  // قفل قائمة "كل الفئات" لما تدوس بره منها
   useEffect(() => {
     if (!catsOpen) return;
     const handleClick = (e: MouseEvent) => {
@@ -59,23 +69,64 @@ export default function Navbar() {
 
   return (
     <>
-      {/* الهيدر الرئيسي */}
-      <header className="bg-[var(--color-brand)] text-white sticky top-0 z-50 shadow-lg">
-        <div className="dc-container flex items-center gap-3 sm:gap-4 py-3">
+      {/* الشريط العلوي — إعلان + مميزات */}
+      <div className="hidden md:block bg-[var(--color-brand-deep)] text-white/90 text-xs">
+        <div className="dc-container flex items-center justify-between h-9">
+          <div className="flex items-center gap-5">
+            <span className="flex items-center gap-1.5">
+              <Truck size={13} className="text-[var(--color-accent)]" />
+              توصيل مجاني للطلبات فوق 2000 ج.م
+            </span>
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck size={13} className="text-[var(--color-accent)]" />
+              ضمان أصلي على كل المنتجات
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Headphones size={13} className="text-[var(--color-accent)]" />
+              دعم فني 24/7
+            </span>
+          </div>
+          <div className="flex items-center gap-4 opacity-80">
+            <Link
+              href="/track-order"
+              className="hover:text-white transition-colors"
+            >
+              تتبع طلبك
+            </Link>
+            <span className="w-px h-3 bg-white/20" />
+            <a
+              href="tel:+20 10 61013177"
+              dir="ltr"
+              className="hover:text-white transition-colors"
+            >
+              +20 10 61013177
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* الهيدر الرئيسي — زجاجي عائم */}
+      <header
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "dc-glass shadow-[0_8px_30px_rgba(20,8,10,0.08)]"
+            : "bg-white"
+        }`}
+      >
+        <div className="dc-container flex items-center gap-3 sm:gap-5 py-3.5">
           {/* زر القائمة للموبايل */}
           <button
             onClick={() => setMenuOpen(true)}
-            className={`${searchOpen ? "hidden" : ""} md:hidden text-white p-1.5 rounded-lg transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60`}
+            className={`${searchOpen ? "hidden" : ""} md:hidden text-[var(--color-ink)] p-1.5 rounded-lg transition-colors hover:bg-[var(--color-canvas)] focus:outline-none`}
             aria-label="فتح القائمة"
           >
             <Menu size={22} />
           </button>
 
-          {/* زرار إغلاق البحث (موبايل فقط، لما البحث يكون مفتوح) */}
           {searchOpen && (
             <button
               onClick={() => setSearchOpen(false)}
-              className="md:hidden text-white p-1.5 rounded-lg transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
+              className="md:hidden text-[var(--color-ink)] p-1.5 rounded-lg transition-colors hover:bg-[var(--color-canvas)] focus:outline-none"
               aria-label="إغلاق البحث"
             >
               <X size={22} />
@@ -85,22 +136,22 @@ export default function Navbar() {
           {/* اللوجو */}
           <Link
             href="/"
-            className={`${searchOpen ? "hidden" : "flex"} md:flex items-center gap-2 shrink-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/60`}
+            className={`${searchOpen ? "hidden" : "flex"} md:flex items-center gap-2.5 shrink-0 focus:outline-none group`}
           >
-            <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center p-1 shadow-sm">
+            <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-dark)] flex items-center justify-center shadow-[0_6px_16px_-4px_rgba(225,29,42,0.5)] transition-transform group-hover:scale-105">
               <Image
                 src="/logo.jpeg"
                 alt="Double Click"
-                width={36}
-                height={36}
+                width={32}
+                height={32}
                 className="rounded-md object-contain"
               />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="font-extrabold text-base sm:text-lg tracking-tight">
+              <span className="font-extrabold text-[17px] sm:text-lg tracking-tight text-[var(--color-ink)]">
                 Double Click
               </span>
-              <span className="text-[10px] opacity-70 hidden sm:block">
+              <span className="text-[10px] text-[var(--color-muted)] hidden sm:block -mt-0.5">
                 مستلزمات الكمبيوتر
               </span>
             </div>
@@ -108,25 +159,23 @@ export default function Navbar() {
 
           {/* الموقع */}
           <div
-            className={`${
-              searchOpen ? "hidden" : "hidden lg:flex"
-            } items-center gap-1.5 text-xs border-r border-white/30 pr-3.5 mr-1 leading-tight`}
+            className={`${searchOpen ? "hidden" : "hidden lg:flex"} items-center gap-1.5 text-xs pr-4 mr-1 leading-tight border-r border-[var(--color-line)]`}
           >
-            <MapPin size={16} className="opacity-90" />
+            <MapPin size={15} className="text-[var(--color-brand)]" />
             <div>
-              <div className="opacity-85">التوصيل لـ</div>
-              <div className="font-bold">الإسكندرية</div>
+              <div className="text-[var(--color-muted)]">التوصيل لـ</div>
+              <div className="font-bold text-[var(--color-ink)]">
+                الإسكندرية
+              </div>
             </div>
           </div>
 
-          {/* البحث — مربع كامل على الكمبيوتر دايمًا، وعلى الموبايل بيتفتح لما تدوس على الأيقونة */}
+          {/* البحث */}
           <div
-            className={`${
-              searchOpen ? "flex" : "hidden"
-            } md:flex flex-1 bg-white rounded-xl overflow-hidden min-w-0 shadow-sm ring-1 ring-black/5 focus-within:ring-2 focus-within:ring-[var(--color-accent)] transition-shadow`}
+            className={`${searchOpen ? "flex" : "hidden"} md:flex flex-1 bg-[var(--color-canvas)] rounded-2xl overflow-hidden min-w-0 ring-1 ring-[var(--color-line)] focus-within:ring-2 focus-within:ring-[var(--color-brand)] transition-all`}
           >
             <select
-              className="hidden sm:block bg-[var(--color-canvas)] px-2.5 text-[13px] text-[var(--color-muted)] outline-none border-l border-[var(--color-line)] cursor-pointer"
+              className="hidden sm:block bg-transparent px-3 text-[13px] text-[var(--color-muted)] outline-none border-l border-[var(--color-line)] cursor-pointer"
               defaultValue="all"
             >
               <option value="all">كل الفئات</option>
@@ -137,21 +186,20 @@ export default function Navbar() {
             <input
               autoFocus={searchOpen}
               placeholder="دور على منتج، ماركة، أو فئة..."
-              className="flex-1 min-w-0 border-none px-3 py-2.5 text-sm outline-none text-[var(--color-ink)] placeholder:text-[var(--color-muted)]"
+              className="flex-1 min-w-0 border-none bg-transparent px-3.5 py-3 text-sm outline-none text-[var(--color-ink)] placeholder:text-[var(--color-muted)]"
             />
             <button
-              className="bg-[var(--color-accent)] px-4 flex items-center justify-center hover:bg-[var(--color-accent-hover)] active:scale-95 transition-all"
+              className="dc-btn-primary px-5 flex items-center justify-center rounded-none"
               aria-label="بحث"
             >
               <Search size={18} color="#fff" />
             </button>
           </div>
 
-          {/* أيقونة البحث (موبايل فقط، لما البحث يكون مقفول) */}
           {!searchOpen && (
             <button
               onClick={() => setSearchOpen(true)}
-              className="md:hidden text-white p-1.5 rounded-lg transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60 mr-auto"
+              className="md:hidden text-[var(--color-ink)] p-1.5 rounded-lg transition-colors hover:bg-[var(--color-canvas)] focus:outline-none mr-auto"
               aria-label="فتح البحث"
             >
               <Search size={22} />
@@ -161,25 +209,33 @@ export default function Navbar() {
           {/* حسابي */}
           <Link
             href="/account"
-            className={`${searchOpen ? "hidden" : "hidden md:block"} text-xs leading-tight px-2.5 py-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-white/60 ${
-              isActive("/account") ? "bg-white/15" : "hover:bg-white/10"
+            className={`${searchOpen ? "hidden" : "hidden md:flex"} items-center gap-2 text-xs leading-tight px-3 py-1.5 rounded-xl transition-colors border border-[var(--color-line)] ${
+              isActive("/account")
+                ? "bg-[var(--color-brand)] text-white border-transparent"
+                : "hover:bg-[var(--color-canvas)] text-[var(--color-ink)]"
             }`}
           >
-            <div className="opacity-85">مرحبًا، سجل دخول</div>
-            <div className="font-bold">حسابي</div>
+            <div>
+              <div className="text-[var(--color-muted)] text-[10px]">
+                مرحبًا
+              </div>
+              <div className="font-bold">حسابي</div>
+            </div>
           </Link>
 
           {/* السلة */}
           <Link
             href="/cart"
-            className={`${searchOpen ? "hidden md:block" : ""} relative p-1.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-white/60 ${
-              isActive("/cart") ? "bg-white/15" : "hover:bg-white/10"
+            className={`${searchOpen ? "hidden md:flex" : ""} relative p-2.5 rounded-xl transition-all ${
+              isActive("/cart")
+                ? "bg-[var(--color-brand)] text-white"
+                : "bg-[var(--color-canvas)] hover:bg-[var(--color-line)] text-[var(--color-ink)]"
             }`}
             aria-label="السلة"
           >
-            <ShoppingCart size={24} />
+            <ShoppingCart size={22} />
             {totalCount > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-[var(--color-accent)] text-white text-[10px] font-black rounded-full w-[18px] h-[18px] flex items-center justify-center shadow-sm dc-fade-in">
+              <span className="absolute -top-1 -right-1 bg-[var(--color-accent)] text-white text-[10px] font-black rounded-full w-[20px] h-[20px] flex items-center justify-center shadow-[0_4px_10px_rgba(255,45,63,0.5)] dc-fade-in dc-pulse-glow">
                 {toArabicNumber(totalCount)}
               </span>
             )}
@@ -187,14 +243,15 @@ export default function Navbar() {
         </div>
 
         {/* شريط الفئات */}
-        <div className="bg-[var(--color-brand-dark)]">
-          <div className="dc-container flex gap-5 items-center text-[13px] whitespace-nowrap overflow-x-auto no-scrollbar py-2 relative">
+        <div className="border-t border-[var(--color-line)] bg-white/50">
+          <div className="dc-container flex gap-6 items-center text-[13px] whitespace-nowrap overflow-x-auto no-scrollbar py-2.5 relative">
             <div ref={catsRef} className="relative shrink-0">
               <button
                 onClick={() => setCatsOpen((v) => !v)}
-                className="flex items-center gap-1 font-bold shrink-0 py-1 hover:text-[var(--color-accent)] transition-colors focus:outline-none"
+                className="flex items-center gap-1.5 font-bold shrink-0 py-1 text-[var(--color-ink)] hover:text-[var(--color-brand)] transition-colors focus:outline-none"
                 aria-expanded={catsOpen}
               >
+                <Menu size={14} />
                 كل الفئات
                 <ChevronDown
                   size={14}
@@ -203,7 +260,7 @@ export default function Navbar() {
               </button>
 
               {catsOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl ring-1 ring-black/5 py-2 z-50 dc-fade-in">
+                <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-2xl shadow-[var(--shadow-float)] ring-1 ring-[var(--color-line)] py-2.5 z-50 dc-fade-in">
                   {categories.map((c) => {
                     const Icon = c.icon;
                     return (
@@ -211,10 +268,12 @@ export default function Navbar() {
                         key={c.slug}
                         href={`/category/${encodeURIComponent(c.slug)}`}
                         onClick={() => setCatsOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-[var(--color-ink)] hover:bg-[var(--color-canvas)] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-[var(--color-ink)] hover:bg-[var(--color-canvas)] hover:text-[var(--color-brand)] transition-colors group"
                       >
-                        <Icon size={16} color="var(--color-brand)" />
-                        <span>{c.name}</span>
+                        <span className="w-8 h-8 rounded-lg bg-[var(--color-canvas)] flex items-center justify-center group-hover:bg-[var(--color-brand)] group-hover:text-white transition-colors">
+                          <Icon size={16} />
+                        </span>
+                        <span className="text-sm font-medium">{c.name}</span>
                       </Link>
                     );
                   })}
@@ -222,7 +281,7 @@ export default function Navbar() {
               )}
             </div>
 
-            <span className="w-px h-4 bg-white/20 shrink-0" />
+            <span className="w-px h-4 bg-[var(--color-line)] shrink-0" />
 
             {categories.map((c) => (
               <Link
@@ -230,8 +289,8 @@ export default function Navbar() {
                 href={`/category/${encodeURIComponent(c.slug)}`}
                 className={`shrink-0 transition-colors pb-0.5 border-b-2 ${
                   isActive(`/category/${c.slug}`)
-                    ? "text-white border-[var(--color-accent)]"
-                    : "text-white/85 border-transparent hover:text-white hover:border-white/40"
+                    ? "text-[var(--color-brand)] border-[var(--color-brand)] font-bold"
+                    : "text-[var(--color-ink)]/70 border-transparent hover:text-[var(--color-brand)] hover:border-[var(--color-brand)]/40"
                 }`}
               >
                 {c.name}
@@ -239,7 +298,7 @@ export default function Navbar() {
             ))}
             <Link
               href="/deals"
-              className="text-[var(--color-accent)] font-bold shrink-0 hover:text-white transition-colors mr-auto flex items-center gap-1"
+              className="text-[var(--color-accent)] font-bold shrink-0 hover:underline mr-auto flex items-center gap-1 dc-text-glow"
             >
               🔥 عروض اليوم
             </Link>
@@ -251,16 +310,27 @@ export default function Navbar() {
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
-          className="fixed inset-0 bg-black/40 z-[60] dc-fade-in"
+          className="fixed inset-0 bg-black/50 z-[60] dc-fade-in"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="absolute top-0 right-0 bottom-0 w-[300px] max-w-[85vw] bg-white p-5 shadow-2xl dc-slide-in overflow-y-auto"
+            className="absolute top-0 right-0 bottom-0 w-[320px] max-w-[88vw] bg-white p-6 shadow-2xl dc-slide-in overflow-y-auto"
           >
-            <div className="flex justify-between items-center mb-5">
-              <span className="font-extrabold text-base text-[var(--color-ink)]">
-                القائمة
-              </span>
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-dark)] flex items-center justify-center">
+                  <Image
+                    src="/logo.jpeg"
+                    alt=""
+                    width={26}
+                    height={26}
+                    className="rounded object-contain"
+                  />
+                </div>
+                <span className="font-extrabold text-base text-[var(--color-ink)]">
+                  القائمة
+                </span>
+              </div>
               <button
                 onClick={() => setMenuOpen(false)}
                 className="p-1.5 rounded-lg hover:bg-[var(--color-canvas)] transition-colors"
@@ -272,7 +342,7 @@ export default function Navbar() {
             <Link
               href="/account"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 py-3 border-b border-[var(--color-line)] text-[var(--color-ink)] font-bold"
+              className="flex items-center gap-3 py-3.5 border-b border-[var(--color-line)] text-[var(--color-ink)] font-bold"
             >
               حسابي
             </Link>
@@ -283,17 +353,17 @@ export default function Navbar() {
                   key={c.slug}
                   href={`/category/${encodeURIComponent(c.slug)}`}
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 py-3 border-b border-[var(--color-line)] text-[var(--color-ink)] hover:text-[var(--color-brand)] transition-colors"
+                  className="flex items-center gap-3 py-3.5 border-b border-[var(--color-line)] text-[var(--color-ink)] hover:text-[var(--color-brand)] transition-colors"
                 >
                   <Icon size={18} color="var(--color-brand)" />
-                  <span className="text-sm">{c.name}</span>
+                  <span className="text-sm font-medium">{c.name}</span>
                 </Link>
               );
             })}
             <Link
               href="/custom-build"
               onClick={() => setMenuOpen(false)}
-              className="block mt-4 text-center bg-[var(--color-brand)] text-white font-bold py-3 rounded-lg hover:bg-[var(--color-brand-dark)] transition-colors"
+              className="block mt-5 text-center dc-btn-primary font-bold py-3.5 rounded-xl"
             >
               اطلب بيلد مخصص
             </Link>

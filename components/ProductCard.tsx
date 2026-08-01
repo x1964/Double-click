@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, ShoppingCart, Check } from "lucide-react";
+import { useState } from "react";
 import type { Product } from "@/lib/types";
 import { useCart } from "@/lib/cart-context";
 import { placeholderImage } from "@/lib/data";
 
 /**
- * بطاقة منتج (Product Card)
- * قابلة لإعادة الاستخدام في كل الصفحات: الرئيسية، الفئات، العروض، إلخ.
- * - بتدير حالة "أضيف للسلة" محليًا.
- * - بتروّع (hover) برفع خفيف وظل.
+ * بطاقة منتج احترافية (Premium Product Card)
+ * - تصميم عصري مع صورة في خلفية متدرجة، شارة خصم، وزر إضافة سريع.
+ * - حالة "أضيف للسلة" مع تأكيد بصري.
  */
 export default function ProductCard({
   p,
@@ -21,82 +21,118 @@ export default function ProductCard({
   badge?: string;
 }) {
   const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(p.name);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
 
   return (
     <Link
       href={`/product/${encodeURIComponent(p.name)}`}
-      className="group bg-[var(--color-surface)] border border-[var(--color-line)] rounded-xl p-4 flex flex-col relative transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-hover)] hover:border-[var(--color-brand)]/30"
+      className="group relative bg-[var(--color-surface)] rounded-2xl overflow-hidden border border-[var(--color-line)] flex flex-col transition-all duration-300 hover:shadow-[var(--shadow-hover)] hover:border-[var(--color-brand)]/40 hover:-translate-y-1"
     >
-      {badge && (
-        <span className="absolute top-3 right-3 bg-[var(--color-accent)] text-white text-[11px] font-bold px-2.5 py-[3px] rounded-full z-10">
-          {badge}
-        </span>
-      )}
+      {/* الشارات */}
+      <div className="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
+        {p.discount && (
+          <span className="bg-[var(--color-brand)] text-white text-[11px] font-black px-2.5 py-1 rounded-lg shadow-[0_4px_12px_rgba(225,29,42,0.4)]">
+            -{p.discount}
+          </span>
+        )}
+        {badge && (
+          <span className="bg-[var(--color-gold)]/90 text-[var(--color-brand-deep)] text-[10px] font-bold px-2.5 py-1 rounded-lg">
+            {badge}
+          </span>
+        )}
+      </div>
+
+      {/* زر الإضافة السريع (يظهر عند المرور) */}
+      <button
+        onClick={handleAdd}
+        aria-label="إضافة سريعة للسلة"
+        className={`absolute top-3 left-3 z-20 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 shadow-lg ${
+          added
+            ? "bg-green-500 text-white"
+            : "bg-white text-[var(--color-ink)] opacity-0 group-hover:opacity-100 hover:bg-[var(--color-brand)] hover:text-white"
+        }`}
+      >
+        {added ? <Check size={16} /> : <ShoppingCart size={16} />}
+      </button>
 
       {/* الصورة */}
-      <div className="h-[130px] bg-[var(--color-canvas)] rounded-[10px] overflow-hidden mb-3.5 relative">
+      <div className="relative h-[180px] overflow-hidden bg-gradient-to-br from-[var(--color-canvas)] to-white">
+        <div className="absolute inset-0 opacity-50 dc-grid-bg" />
         <Image
           src={placeholderImage(p.name, 400, 400, p.image)}
           alt={p.name}
           fill
           sizes="(max-width: 640px) 50vw, 25vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
         />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
       </div>
 
-      {/* الاسم */}
-      <div className="text-sm font-medium mb-2 min-h-[40px] leading-6 text-[var(--color-ink)] line-clamp-2">
-        {p.name}
-      </div>
-
-      {/* التقييم */}
-      <div className="flex items-center gap-1.5 mb-2">
-        <div className="flex">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={i}
-              size={13}
-              fill={i < Math.round(p.rating) ? "var(--color-brand)" : "none"}
-              color="var(--color-brand)"
-              strokeWidth={1.5}
-            />
-          ))}
+      {/* المحتوى */}
+      <div className="p-4 flex flex-col flex-1">
+        {/* التقييم */}
+        <div className="flex items-center gap-1.5 mb-1.5">
+          <div className="flex">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                size={12}
+                fill={i < Math.round(p.rating) ? "var(--color-brand)" : "none"}
+                color="var(--color-brand)"
+                strokeWidth={1.5}
+              />
+            ))}
+          </div>
+          <span className="text-[11px] text-[var(--color-muted)]">({p.reviews})</span>
         </div>
-        <span className="text-xs text-[var(--color-muted)]">({p.reviews})</span>
-      </div>
 
-      {/* السعر */}
-      <div className="flex items-baseline gap-2 mb-1">
-        <span className="text-[19px] font-bold text-[var(--color-ink)]">
-          {p.price} <span className="text-xs font-normal">ج.م</span>
-        </span>
-        {p.oldPrice && (
-          <span className="text-[13px] text-[var(--color-muted)] line-through">
-            {p.oldPrice}
-          </span>
-        )}
-        {p.discount && (
-          <span className="text-xs text-[var(--color-brand)] font-bold">
-            خصم {p.discount}
-          </span>
-        )}
-      </div>
+        {/* الاسم */}
+        <div className="text-[13.5px] font-medium mb-3 min-h-[40px] leading-6 text-[var(--color-ink)] line-clamp-2 group-hover:text-[var(--color-brand)] transition-colors">
+          {p.name}
+        </div>
 
-      <div className="text-xs text-[var(--color-brand)] font-medium mb-3">
-        توصيل مجاني · متوفر الآن
-      </div>
+        {/* السعر */}
+        <div className="mt-auto">
+          <div className="flex items-baseline gap-2 mb-2">
+            <span className="text-[20px] font-extrabold text-[var(--color-ink)]">
+              {p.price}
+              <span className="text-xs font-normal text-[var(--color-muted)] mr-1">ج.م</span>
+            </span>
+            {p.oldPrice && (
+              <span className="text-[12px] text-[var(--color-muted)] line-through">
+                {p.oldPrice}
+              </span>
+            )}
+          </div>
 
-      {/* زر الإضافة */}
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          addToCart(p.name);
-        }}
-        className="mt-auto bg-[var(--color-brand)] text-white hover:bg-[var(--color-brand-dark)] border-none rounded-full py-2.5 font-bold text-[13px] transition-colors"
-      >
-        أضف للسلة
-      </button>
+          <button
+            onClick={handleAdd}
+            className={`w-full rounded-xl py-2.5 font-bold text-[13px] transition-all duration-300 flex items-center justify-center gap-2 ${
+              added
+                ? "bg-green-500 text-white"
+                : "bg-[var(--color-canvas)] text-[var(--color-ink)] hover:bg-[var(--color-brand)] hover:text-white border border-[var(--color-line)] hover:border-transparent"
+            }`}
+          >
+            {added ? (
+              <>
+                <Check size={15} /> أُضيف للسلة
+              </>
+            ) : (
+              <>
+                <ShoppingCart size={15} /> أضف للسلة
+              </>
+            )}
+          </button>
+        </div>
+      </div>
     </Link>
   );
 }

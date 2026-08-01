@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl" className={ibmPlexSansArabic.variable}>
-      <body className="min-h-screen flex flex-col font-sans">
+      <body className="min-h-screen flex flex-col font-sans" suppressHydrationWarning>
         <CartProvider>
           <Navbar />
           <main className="flex-1 flex flex-col">{children}</main>
