@@ -5,26 +5,26 @@
    ========================================================================== */
 
 @theme {
-  /* ألوان البراند: أزرق غامق + أحمر */
-  --color-brand: #1e40af;
-  --color-brand-dark: #1e3a8a;
-  --color-brand-deep: #0f172a;
-  --color-accent: #dc2626;
-  --color-accent-hover: #b91c1c;
+  /* ألوان البراند: أبيض + أحمر */
+  --color-brand: #dc2626;
+  --color-brand-dark: #b91c1c;
+  --color-brand-deep: #7f1d1d;
+  --color-accent: #991b1b;
+  --color-accent-hover: #7f1d1d;
 
   /* ألوان محايدة */
   --color-surface: #ffffff;
-  --color-canvas: #f1f5f9;
-  --color-ink: #0f172a;
-  --color-muted: #64748b;
-  --color-line: #e2e8f0;
+  --color-canvas: #fff5f5;
+  --color-ink: #1a0606;
+  --color-muted: #8a5a5a;
+  --color-line: #fecaca;
 
   /* خط — بييجي من next/font عبر المتغير --font-tajawal (مع fallback) */
   --font-sans: var(--font-tajawal), "Tajawal", "Segoe UI", system-ui, sans-serif;
 
   /* ظلال */
-  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06);
-  --shadow-hover: 0 10px 30px rgba(30, 64, 175, 0.12);
+  --shadow-card: 0 1px 3px rgba(127, 29, 29, 0.06);
+  --shadow-hover: 0 10px 30px rgba(220, 38, 38, 0.15);
 
   /* أنصاف الأقطار */
   --radius-sm: 8px;

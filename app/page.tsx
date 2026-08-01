@@ -20,7 +20,7 @@ export default function DoubleClickHome() {
       <section
         className="text-white py-10 px-4"
         style={{
-          background: "linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #0f172a 100%)",
+          background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #7f1d1d 100%)",
         }}
       >
         <div className="dc-container grid lg:grid-cols-[1.1fr_0.9fr] gap-7 items-center">
