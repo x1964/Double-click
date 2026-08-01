@@ -59,11 +59,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* شريط علوي ترويجي */}
-      <div className="bg-[var(--color-brand-deep)] text-white text-center text-xs py-1.5 px-2.5 tracking-wide">
-        توصيل مجاني لأي طلب فوق ١٥٠٠ ج.م · دفع عند الاستلام متاح في كل مصر
-      </div>
-
       {/* الهيدر الرئيسي */}
       <header className="bg-[var(--color-brand)] text-white sticky top-0 z-50 shadow-lg">
         <div className="dc-container flex items-center gap-3 sm:gap-4 py-3">
