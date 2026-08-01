@@ -83,7 +83,7 @@ export default function CartPage() {
                   className="w-[60px] h-[60px] rounded-[10px] overflow-hidden shrink-0 relative"
                 >
                   <Image
-                    src={placeholderImage(r.name, 120, 120)}
+                    src={placeholderImage(r.name, 120, 120, r.image)}
                     alt={r.name}
                     fill
                     sizes="60px"

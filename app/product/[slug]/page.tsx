@@ -32,7 +32,7 @@ export default async function ProductPage({
         {/* صورة */}
         <div className="h-[260px] bg-[var(--color-canvas)] rounded-xl overflow-hidden relative">
           <Image
-            src={placeholderImage(p.name, 600, 600)}
+            src={placeholderImage(p.name, 600, 600, p.image)}
             alt={p.name}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"

@@ -2,12 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // الصور المؤقتة (placeholders) بتيجي من placehold.co.
-    // لما تجهز صور المنتجات الحقيقية، ضيف الـ domains بتاعتك هنا أو استخدم remotePatterns.
+    // مصادر الصور البعيدة:
+    // - placehold.co: الصور المؤقتة النصية.
+    // - images.unsplash.com: صور المنتجات الحقيقية (مجانية للاستخدام التجاري).
+    // لما تجهز صور منتجاتك على دومين خاص بيك، ضيفه هنا.
     remotePatterns: [
       {
         protocol: "https",
         hostname: "placehold.co",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },

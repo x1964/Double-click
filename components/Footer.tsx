@@ -6,6 +6,7 @@ import Link from "next/link";
 /**
  * الفوتر الموحّد (Shared Footer)
  * بيظهر في كل الصفحات عن طريق layout.tsx.
+ * كل الروابط مربوطة بصفحات حقيقية جوّه الموقع أو قنوات تواصل خارجية.
  */
 
 function FacebookIcon({ size = 18 }: { size?: number }) {
@@ -32,128 +33,154 @@ function WhatsAppIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-const customerLinks = [
-  "تتبع الطلب",
-  "الشحن والتوصيل",
-  "الاسترجاع والاستبدال",
-  "الأسئلة الشائعة",
-  "تواصل معنا",
+/** روابط خدمة العملاء (صفحات داخلية) */
+const customerLinks: { label: string; href: string }[] = [
+  { label: "تتبع الطلب", href: "/track-order" },
+  { label: "الشحن والتوصيل", href: "/shipping" },
+  { label: "الاسترجاع والاستبدال", href: "/returns" },
+  { label: "الأسئلة الشائعة", href: "/faq" },
+  { label: "تواصل معنا", href: "/contact" },
 ];
 
-const companyLinks = ["عن دبيل كليك", "الوظائف", "الشروط والأحكام", "سياسة الخصوصية"];
+/** روابط الشركة (صفحات داخلية) */
+const companyLinks: { label: string; href: string }[] = [
+  { label: "عن دبيل كليك", href: "/about" },
+  { label: "الوظائف", href: "/careers" },
+  { label: "الشروط والأحكام", href: "/terms" },
+  { label: "سياسة الخصوصية", href: "/privacy" },
+];
 
 export default function Footer() {
   return (
     <footer className="bg-[var(--color-brand-deep)] text-white mt-8">
-      <div className="dc-container grid grid-cols-2 md:grid-cols-4 gap-6 py-10">
-        {/* العمود الأول: عن المتجر */}
-        <div className="col-span-2 md:col-span-1">
-          <div className="font-extrabold mb-3.5 text-lg">Double Click</div>
-          <p className="text-[13px] opacity-80 leading-7 mb-4">
-            وجهتك لكل مستلزمات الكمبيوتر في مصر — أصلي، بضمان، وتوصيل لباب البيت.
-          </p>
-          <a
-            href={`https://wa.me/${CONTACT.whatsapp}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-[13px] opacity-90 mb-3.5 hover:opacity-100"
-          >
-            <WhatsAppIcon size={16} /> <span dir="ltr">{CONTACT.phone}</span>
-          </a>
-          <a
-            href={`tel:${CONTACT.phone}`}
-            className="flex items-center gap-2 text-[13px] opacity-90 mb-3.5 hover:opacity-100"
-          >
-            <Phone size={16} /> <span dir="ltr">{CONTACT.phone}</span>
-          </a>
-          <div className="flex gap-2.5">
-            <a
-              href={`https://wa.me/${CONTACT.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="واتساب"
-              className="w-[34px] h-[34px] rounded-full bg-[#25D366]/20 hover:bg-[#25D366]/30 flex items-center justify-center transition-colors"
-            >
-              <WhatsAppIcon />
-            </a>
-            <a
-              href={CONTACT.facebook}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="فيسبوك"
-              className="w-[34px] h-[34px] rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-            >
-              <FacebookIcon />
-            </a>
-            <a
-              href={CONTACT.tiktok}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="تيك توك"
-              className="w-[34px] h-[34px] rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-            >
-              <TikTokIcon />
-            </a>
-          </div>
-        </div>
+      <div className="dc-container py-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6">
+          {/* العمود الأول: عن المتجر */}
+          <div className="col-span-2 md:col-span-1">
+            <div className="font-extrabold mb-3.5 text-lg">Double Click</div>
+            <p className="text-[13px] opacity-75 leading-7 mb-5">
+              وجهتك لكل مستلزمات الكمبيوتر في مصر — أصلي، بضمان، وتوصيل لباب البيت.
+            </p>
 
-        {/* تسوق */}
-        <div>
-          <div className="font-bold mb-3.5 text-sm">تسوق</div>
-          {categories.slice(0, 5).map((c) => (
-            <Link
-              key={c.slug}
-              href={`/category/${encodeURIComponent(c.slug)}`}
-              className="block text-[13px] opacity-80 mb-2.5 hover:opacity-100 hover:text-[var(--color-accent)] transition-colors"
-            >
-              {c.name}
-            </Link>
-          ))}
-        </div>
-
-        {/* خدمة العملاء */}
-        <div>
-          <div className="font-bold mb-3.5 text-sm">خدمة العملاء</div>
-          {customerLinks.map((l) => (
-            <a
-              key={l}
-              href={`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent("مرحبًا، عندي استفسار عن: " + l)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-[13px] opacity-80 mb-2.5 hover:opacity-100 hover:text-[var(--color-accent)] cursor-pointer transition-colors"
-            >
-              {l}
-            </a>
-          ))}
-        </div>
-
-        {/* الشركة */}
-        <div>
-          <div className="font-bold mb-3.5 text-sm">الشركة</div>
-          {companyLinks.map((l) => (
-            <div
-              key={l}
-              className="text-[13px] opacity-80 mb-2.5 hover:opacity-100 cursor-pointer transition-opacity"
-            >
-              {l}
+            {/* قنوات التواصل السريعة */}
+            <div className="space-y-2.5 mb-5">
+              <a
+                href={`https://wa.me/${CONTACT.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 text-[13px] opacity-85 hover:opacity-100 hover:text-[#25D366] transition-colors"
+              >
+                <WhatsAppIcon size={15} /> <span dir="ltr">{CONTACT.phone}</span>
+              </a>
+              <a
+                href={`tel:${CONTACT.phone}`}
+                className="flex items-center gap-2.5 text-[13px] opacity-85 hover:opacity-100 hover:text-white transition-colors"
+              >
+                <Phone size={15} /> <span dir="ltr">{CONTACT.phone}</span>
+              </a>
             </div>
-          ))}
+
+            {/* أيقونات السوشيال */}
+            <div className="flex gap-2.5">
+              <a
+                href={`https://wa.me/${CONTACT.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="واتساب"
+                className="w-9 h-9 rounded-full bg-[#25D366]/20 hover:bg-[#25D366] hover:text-white text-[#25D366] flex items-center justify-center transition-all"
+              >
+                <WhatsAppIcon size={17} />
+              </a>
+              <a
+                href={CONTACT.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="فيسبوك"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#1877F2] flex items-center justify-center transition-all"
+              >
+                <FacebookIcon size={17} />
+              </a>
+              <a
+                href={CONTACT.tiktok}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="تيك توك"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white hover:text-black flex items-center justify-center transition-all"
+              >
+                <TikTokIcon size={17} />
+              </a>
+            </div>
+          </div>
+
+          {/* تسوق */}
+          <div>
+            <div className="font-bold mb-4 text-sm tracking-wide">تسوّق</div>
+            <ul className="space-y-3">
+              {categories.slice(0, 5).map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    href={`/category/${encodeURIComponent(c.slug)}`}
+                    className="text-[13px] opacity-75 hover:opacity-100 hover:text-[var(--color-accent)] transition-colors"
+                  >
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* خدمة العملاء */}
+          <div>
+            <div className="font-bold mb-4 text-sm tracking-wide">خدمة العملاء</div>
+            <ul className="space-y-3">
+              {customerLinks.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-[13px] opacity-75 hover:opacity-100 hover:text-[var(--color-accent)] transition-colors"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* الشركة */}
+          <div>
+            <div className="font-bold mb-4 text-sm tracking-wide">الشركة</div>
+            <ul className="space-y-3">
+              {companyLinks.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-[13px] opacity-75 hover:opacity-100 hover:text-[var(--color-accent)] transition-colors"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
       {/* كريديت التطوير */}
-      <div className="border-t border-white/15 py-4 text-center text-xs opacity-70">
-        © 2026 Double Click — كل الحقوق محفوظة
-        <span className="mx-2">·</span>
-        <a
-          href="https://wa.me/201207771639"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:opacity-100 hover:text-white transition-colors"
-        >
-          تطوير الموقع من شركة{" "}
-          <span className="font-bold text-white/90">kernel-z</span>
-        </a>
+      <div className="border-t border-white/10 py-4">
+        <div className="dc-container flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-right">
+          <div className="text-xs opacity-65">
+            © 2026 Double Click — كل الحقوق محفوظة
+          </div>
+          <a
+            href="https://wa.me/201207771639"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs opacity-65 hover:opacity-100 hover:text-white transition-colors flex items-center gap-1.5"
+          >
+            تطوير الموقع من شركة
+            <span className="font-bold text-white/90">kernel-z</span>
+          </a>
+        </div>
       </div>
     </footer>
   );

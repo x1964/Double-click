@@ -46,6 +46,8 @@ export const products: Product[] = [
     reviews: 312,
     category: "ماوس",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "monitor-curve-27-qhd",
@@ -57,6 +59,8 @@ export const products: Product[] = [
     reviews: 189,
     category: "شاشات",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "case-airflow-pro",
@@ -68,6 +72,8 @@ export const products: Product[] = [
     reviews: 97,
     category: "كيسات PC",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "keyboard-nova-87",
@@ -79,6 +85,8 @@ export const products: Product[] = [
     reviews: 224,
     category: "كيبورد",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "headset-aero-h7",
@@ -90,6 +98,8 @@ export const products: Product[] = [
     reviews: 156,
     category: "سماعات",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "cpu-ryzen-7",
@@ -101,6 +111,8 @@ export const products: Product[] = [
     reviews: 78,
     category: "معالجات",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=800&q=80",
   },
 
   // لابتوبات
@@ -112,6 +124,8 @@ export const products: Product[] = [
     reviews: 64,
     category: "لابتوبات",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "laptop-probook-slim-14",
@@ -121,6 +135,8 @@ export const products: Product[] = [
     reviews: 132,
     category: "لابتوبات",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "laptop-workstation-x1",
@@ -130,6 +146,8 @@ export const products: Product[] = [
     reviews: 41,
     category: "لابتوبات",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "laptop-student-13",
@@ -139,6 +157,8 @@ export const products: Product[] = [
     reviews: 210,
     category: "لابتوبات",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1531492746076-161ca9bcad58?auto=format&fit=crop&w=800&q=80",
   },
 
   // قطع غيار
@@ -150,6 +170,8 @@ export const products: Product[] = [
     reviews: 88,
     category: "قطع غيار",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "ssd-nvme-1tb",
@@ -159,6 +181,8 @@ export const products: Product[] = [
     reviews: 305,
     category: "قطع غيار",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1597852074816-d933c7d2b988?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "psu-750w-gold",
@@ -168,6 +192,8 @@ export const products: Product[] = [
     reviews: 59,
     category: "قطع غيار",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "gpu-rtx-8gb",
@@ -177,6 +203,8 @@ export const products: Product[] = [
     reviews: 27,
     category: "قطع غيار",
     inStock: true,
+    image:
+      "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80",
   },
 ];
 
@@ -255,10 +283,13 @@ export function iconForCategory(categoryName: string) {
 }
 
 /**
- * بيولّد صورة مؤقتة (placeholder) بألوان البراند لحد ما تجهز صور المنتجات الحقيقية.
- * لما تجهز الصور: حطها في /public/products/ وحدّث الـ Product عشان يستخدم حقل image.
+ * بترجّع صورة المنتج.
+ * - لو المنتج معاه صورة (image)، بتستخدمها على طول.
+ * - لو لأ، بتولّد صورة مؤقتة (placeholder) بألوان البراند.
+ * لما تجهز صور إضافية: حطها في /public/products/ وحدّث الـ Product عشان يستخدم حقل image.
  */
-export function placeholderImage(name: string, w = 400, h = 400): string {
+export function placeholderImage(name: string, w = 400, h = 400, image?: string): string {
+  if (image) return image;
   const label = encodeURIComponent(name.split(" ").slice(0, 2).join(" "));
   return `https://placehold.co/${w}x${h}/0A0A0A/E5383B?text=${label}&font=roboto`;
 }

@@ -36,7 +36,7 @@ export default function ProductCard({
       {/* الصورة */}
       <div className="h-[130px] bg-[var(--color-canvas)] rounded-[10px] overflow-hidden mb-3.5 relative">
         <Image
-          src={placeholderImage(p.name)}
+          src={placeholderImage(p.name, 400, 400, p.image)}
           alt={p.name}
           fill
           sizes="(max-width: 640px) 50vw, 25vw"
