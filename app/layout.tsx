@@ -1,15 +1,19 @@
-import type { Metadata } from "next";
-import { Tajawal } from "next/font/google";
 import "./globals.css";
+
+import { IBM_Plex_Sans_Arabic } from "next/font/google";
 import { CartProvider } from "@/lib/cart-context";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
 
-const tajawal = Tajawal({
+
+const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic", "latin"],
-  weight: ["400", "500", "700", "800"],
-  variable: "--font-tajawal",
+  weight: ["200", "300", "400", "500", "600", "700"],
+  variable: "--font-ibm-plex-sans-arabic",
   display: "swap",
+  preload: true,
+  fallback: ["system-ui", "Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -25,7 +29,7 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={tajawal.variable}>
+    <html lang="ar" dir="rtl" className={ibmPlexSansArabic.variable}>
       <body className="min-h-screen flex flex-col font-sans">
         <CartProvider>
           <Navbar />
